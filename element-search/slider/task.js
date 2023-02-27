@@ -3,58 +3,53 @@ const arraySliderDot = Array.from(document.getElementsByClassName('slider__dot')
 const battonPrev = Array.from(document.getElementsByClassName('slider__arrow_prev'))[0];
 const battonNext = Array.from(document.getElementsByClassName('slider__arrow_next'))[0];
 
+//При открыти страницы делаем первую точку активной (для красоты)
 arraySliderDot[0].classList.add('slider__dot_active');
 
-//Обработка кликов по кнопкам "назад" и "вперед"
-function slider(nameButton) {
-    for (let i = 0; i < arraySliderItem.length; i++) {
-        if (arraySliderItem[i].classList.contains('slider__item_active')) {
-            arraySliderItem[i].classList.remove('slider__item_active');            //Находим то активное фото, которое было до текущего клика и удаляем класс активности
-            if (nameButton) {                                                      // Проверка, если в nameButton значение true, то значит нажали кнопку "вперед" 
-                removeAllDotActive();
-                if ((i + 1) === arraySliderItem.length) {                          //Условие непрерывности для обновления счетчика, если мы дошли до крайней картинки, то обновляем счетчик 
-                    i = -1;
-                    arraySliderItem[i + 1].classList.add('slider__item_active');  // Если было кликнуто "вперед", то добавляем класс активности следующей картинке
-                    arraySliderDot[i + 1].classList.add('slider__dot_active');    // Если было кликнуто "вперед", то добавляем класс активности точке соответствующей следующей картинке
-                } else {
-                    arraySliderItem[i + 1].classList.add('slider__item_active');  // Аналогочно, но для случая, пока мы не долшли до конца списка картинок 
-                    arraySliderDot[i + 1].classList.add('slider__dot_active');    //
-                }
-            } else {                                                              // ↓ Здесь всё аналогочно, только для кнопки "назад"
-                removeAllDotActive();
-                if (i === 0) {
-                    i = arraySliderItem.length;
-                    arraySliderItem[i - 1].classList.add('slider__item_active');
-                    arraySliderDot[i - 1].classList.add('slider__dot_active');
-                } else {
-                    arraySliderItem[i - 1].classList.add('slider__item_active');
-                    arraySliderDot[i - 1].classList.add('slider__dot_active');
-                }
-            }
-            return;
+//Ф-ия определения индекса текущей картинки
+function numberActivImg() {
+    return arraySliderItem.findIndex((element) => element.classList.contains('slider__item_active'))
+}
+
+//Ф-ия открытия новой картинки (и активации точки). Старую картинку закрывает, новую (по указ индексу) открывает
+function ActivetedImg(newIndex) {
+    let indexOld = numberActivImg();                                        // Вызываем ф-ию определения индекса текущей картинки
+    arraySliderItem[indexOld].classList.remove('slider__item_active');      // Закрываем текущ картинку
+    arraySliderDot[indexOld].classList.remove('slider__dot_active');        // Закрываем текущ точку
+    arraySliderItem[newIndex].classList.add('slider__item_active');         // Открываем нужную картинку
+    arraySliderDot[newIndex].classList.add('slider__dot_active');           // Подсвечиваем нужную точку
+}
+
+//Ф-ия обработки индекса нужной картинки после нажатия кнопок "вперед" и "назад". 
+function processor(arg) {
+    let oldIndex = numberActivImg();            // Получем индекс текущей картинки
+    let newIndex;
+
+    if (arg) {                                   // Если нажали кнопку "вперед", то ....
+        if (oldIndex + 1 === arraySliderItem.length) {  //Проверяем не находится ли текущая картинка в конце массива
+            newIndex = 0;                               //Если текущая картинка находится в конце массива, то начинаем просмотр картинок сначала
+        } else {
+            newIndex = oldIndex + 1;            //Если текущая картинка НЕ находится в конце массива, то просто берем индекс следующей картинки
+        }
+    } else {                                    // Если нажали кнопку "назад", то ...
+        if (oldIndex - 1 < 0) {                 // ↓ аналогично ↑
+            newIndex = arraySliderItem.length - 1;
+        } else {
+            newIndex = oldIndex - 1;
         }
     }
+
+    ActivetedImg(newIndex);                    //Запускаем ф-ию открытия картинки с только что полученным индексом следующей картинки
+
 }
 
-battonPrev.onclick = (() => slider(false));
-battonNext.onclick = (() => slider(true));
+battonNext.onclick = (() => processor(true));
+battonPrev.onclick = (() => processor(false));
 
-// Ф-ия, кот удаляет все активные точки при клике. (используется 3 раза, поэтому решил её вынести отдельно)
-function removeAllDotActive() {
-    arraySliderDot.forEach((element) => {
-        element.classList.remove('slider__dot_active');
-    })
-}
-
-// Обработка кликов по точкам
+//Присваиваем каждой точке событие, чтобы при клике запускалась ф-ия открытия соответствующей картинки
 for (let i = 0; i < arraySliderDot.length; i++) {
     arraySliderDot[i].onclick = (() => {
-        removeAllDotActive();                                         //Удаляем все активные точки
-        arraySliderItem.forEach((element) => {
-            element.classList.remove('slider__item_active');          //Удаляем класс активности у всех картинок
-        });
-        arraySliderDot[i].classList.add('slider__dot_active');        //Добавляем класс активности кликнутой точке
-        arraySliderItem[i].classList.add('slider__item_active');      //Добавялем класс активности картинке, которая соответсвует кликнутой точке
+        ActivetedImg(i);
     }
     )
 }

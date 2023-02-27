@@ -10,7 +10,9 @@ arrayMenuLink.forEach((element) => {
             }
         })
 
+        if (element.closest('.menu__item').querySelector('.menu_sub')){     // Проверяем есть ли у кликнутого пункта подменю, потому что если нет, то в следующей строке перед classList будет null, что вызовет ошшибку
         element.closest('.menu__item').querySelector('.menu_sub').classList.toggle('menu_active');  // ищем ближайшего родителя у кликнутого пункта и уже в нём ищем  .menu_sub чтобы добавить или убрать menu_active
         return false;
+        }
     })
 })
