@@ -36,7 +36,7 @@ class Game {
   }
   
   timer() {    
-    let counLetter = Array.from(this.container.getElementsByClassName('symbol')).length;  // Получаю количество символов в слове
+    counLetter = Array.from(this.container.getElementsByClassName('symbol')).length;  // Получаю количество символов в слове
     document.getElementById('timerr').textContent = counLetter;                           //Изменяю таймер в текст е
 
     this.timerId = setInterval(() => {
