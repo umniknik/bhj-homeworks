@@ -8,16 +8,12 @@ class Game {
     this.reset();
 
     this.registerEvents();
-
-    this.timer();
   }
 
   reset() {
     this.setNewWord();
     this.winsElement.textContent = 0;
     this.lossElement.textContent = 0;
-    //debugger;
-    //clearInterval(0);
     clearTimeout(this.timerId);
     this.timer();
   }
@@ -34,19 +30,19 @@ class Game {
     }))
 
   }
-  
-  timer() {    
-    counLetter = Array.from(this.container.getElementsByClassName('symbol')).length;  // Получаю количество символов в слове
-    document.getElementById('timerr').textContent = counLetter;                           //Изменяю таймер в текст е
+
+  timer() {
+    let kodTimer = document.getElementById('timerr')                                        //Беру код таймера в переменную 
+    kodTimer.textContent = this.counLetter;                                                 //Изменяю таймер в тексте
 
     this.timerId = setInterval(() => {
-      counLetter --;
-      document.getElementById('timerr').textContent = counLetter; 
-      if (counLetter < 0) { 
+      this.counLetter--;
+      kodTimer.textContent = this.counLetter;
+      if (this.counLetter < 0) {
         this.lossElement.textContent = 4;
         this.fail();
       }
-    },1000)
+    }, 1000)
 
   }
 
@@ -73,11 +69,12 @@ class Game {
       alert('Вы проиграли!');
       this.reset();
     }
-    this.setNewWord();
   }
 
   setNewWord() {
     const word = this.getWord();
+
+    this.counLetter = word.length;                              // Получаю количество символов в слове
 
     this.renderWord(word);
   }
