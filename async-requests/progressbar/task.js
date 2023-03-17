@@ -17,7 +17,6 @@ button.addEventListener('click', (e) => {                                       
         if (event.lengthComputable) {                                                       //Проверяем измерим ли прогресс
             progress.value = event.loaded / event.total;                                    //Изменяем значение индикаторая, для этого уже отправленный размер делим на весь размер файла
         }
-
     })
 
     xhr.send(formData);                                                                 //Отправляем запрос
