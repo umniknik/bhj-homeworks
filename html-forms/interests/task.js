@@ -36,7 +36,10 @@ labels.forEach(element => {
             if (childUL !== null) {                                                     //Проверка, если список с дочерними чекбоксами существует, то...
                 const childInput = Array.from(childUL.querySelectorAll('input'));       //Берем все дочерние чекбоксы, если они есть
 
-                childInput.forEach((e) => e.checked = value);                           //Устанваливаем всем дочерним чекбоксам значание кликнутого чекбокса
+                childInput.forEach((e) => {
+                    e.indeterminate = false;
+                    e.checked = value;
+                });                           //Устанваливаем всем дочерним чекбоксам значание кликнутого чекбокса
             }
 
         }
